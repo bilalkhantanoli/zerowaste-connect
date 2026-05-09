@@ -9,7 +9,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   login: (email: string, password: string, role: UserRole) => Promise<void>;
   logout: () => Promise<void>;
-  register: (data: RegisterData) => Promise<void>;
+  register: (data: RegisterData) => Promise<User | null>;
 }
 
 interface RegisterData {
@@ -40,6 +40,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await registerUser(data);
     const profile = await fetchCurrentUserProfile();
     setUser(profile);
+    return profile;
   }, []);
 
   useEffect(() => {
@@ -62,8 +63,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(null);
         return;
       }
-      const profile = await fetchCurrentUserProfile();
-      setUser(profile);
+
+      try {
+        const profile = await fetchCurrentUserProfile();
+        if (mounted) setUser(profile);
+      } catch {
+        if (mounted) setUser(null);
+      }
     });
 
     return () => {

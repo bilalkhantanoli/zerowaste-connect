@@ -2,8 +2,10 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, Outlet, useLocation } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { useAuth } from "@/contexts/AuthContext";
+import type { UserRole } from "@/types";
 
 // Pages
 import Index from "./pages/Index";
@@ -27,6 +29,25 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 
 const queryClient = new QueryClient();
 
+function ProtectedRoute({ allowedRoles }: { allowedRoles: UserRole[] }) {
+  const { user, isLoading } = useAuth();
+  const location = useLocation();
+
+  if (isLoading) {
+    return <div className="min-h-screen grid place-items-center text-muted-foreground">Loading dashboard...</div>;
+  }
+
+  if (!user) {
+    return <Navigate to="/login" replace state={{ from: location }} />;
+  }
+
+  if (!allowedRoles.includes(user.role)) {
+    return <Navigate to={`/${user.role}`} replace />;
+  }
+
+  return <Outlet />;
+}
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
@@ -42,31 +63,39 @@ const App = () => (
             <Route path="/community" element={<Community />} />
 
             {/* Donor Routes */}
-            <Route path="/donor" element={<DonorDashboard />} />
-            <Route path="/donor/add" element={<AddDonation />} />
-            <Route path="/donor/donations" element={<DonorDashboard />} />
-            <Route path="/donor/history" element={<DonorDashboard />} />
+            <Route element={<ProtectedRoute allowedRoles={["donor"]} />}>
+              <Route path="/donor" element={<DonorDashboard />} />
+              <Route path="/donor/add" element={<AddDonation />} />
+              <Route path="/donor/donations" element={<DonorDashboard />} />
+              <Route path="/donor/history" element={<DonorDashboard />} />
+            </Route>
 
             {/* Recipient Routes */}
-            <Route path="/recipient" element={<RecipientDashboard />} />
-            <Route path="/recipient/browse" element={<RecipientDashboard />} />
-            <Route path="/recipient/requests" element={<RecipientDashboard />} />
-            <Route path="/recipient/deliveries" element={<RecipientDashboard />} />
-            <Route path="/recipient/history" element={<RecipientDashboard />} />
+            <Route element={<ProtectedRoute allowedRoles={["recipient"]} />}>
+              <Route path="/recipient" element={<RecipientDashboard />} />
+              <Route path="/recipient/browse" element={<RecipientDashboard />} />
+              <Route path="/recipient/requests" element={<RecipientDashboard />} />
+              <Route path="/recipient/deliveries" element={<RecipientDashboard />} />
+              <Route path="/recipient/history" element={<RecipientDashboard />} />
+            </Route>
 
             {/* Volunteer Routes */}
-            <Route path="/volunteer" element={<VolunteerDashboard />} />
-            <Route path="/volunteer/deliveries" element={<VolunteerDashboard />} />
-            <Route path="/volunteer/history" element={<VolunteerDashboard />} />
-            <Route path="/volunteer/achievements" element={<VolunteerDashboard />} />
+            <Route element={<ProtectedRoute allowedRoles={["volunteer"]} />}>
+              <Route path="/volunteer" element={<VolunteerDashboard />} />
+              <Route path="/volunteer/deliveries" element={<VolunteerDashboard />} />
+              <Route path="/volunteer/history" element={<VolunteerDashboard />} />
+              <Route path="/volunteer/achievements" element={<VolunteerDashboard />} />
+            </Route>
 
             {/* Admin Routes */}
-            <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/admin/users" element={<AdminDashboard />} />
-            <Route path="/admin/donations" element={<AdminDashboard />} />
-            <Route path="/admin/deliveries" element={<AdminDashboard />} />
-            <Route path="/admin/reports" element={<AdminDashboard />} />
-            <Route path="/admin/settings" element={<AdminDashboard />} />
+            <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
+              <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/admin/users" element={<AdminDashboard />} />
+              <Route path="/admin/donations" element={<AdminDashboard />} />
+              <Route path="/admin/deliveries" element={<AdminDashboard />} />
+              <Route path="/admin/reports" element={<AdminDashboard />} />
+              <Route path="/admin/settings" element={<AdminDashboard />} />
+            </Route>
 
             {/* Catch-all */}
             <Route path="*" element={<NotFound />} />

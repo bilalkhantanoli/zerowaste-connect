@@ -69,18 +69,26 @@ export default function Register() {
     setIsLoading(true);
 
     try {
-      await register({
+      const profile = await register({
         email: formData.email,
         password: formData.password,
         name: formData.name,
         phone: formData.phone,
         role: selectedRole,
       });
-      
+
+      if (!profile) {
+        toast.success('Account created successfully!', {
+          description: 'Please verify your email, then log in to continue.',
+        });
+        navigate('/login');
+        return;
+      }
+
       toast.success('Account created successfully!', {
         description: 'Welcome to ZeroWaste Connect',
       });
-      
+
       navigate(`/${selectedRole}`);
     } catch (error) {
       toast.error('Registration failed', {

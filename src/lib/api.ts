@@ -4,10 +4,11 @@ import type { UserRole } from '@/types';
 
 export async function fetchCurrentUserProfile() {
   const {
-    data: { user },
+    data: { session },
     error: authError,
-  } = await supabase.auth.getUser();
+  } = await supabase.auth.getSession();
   if (authError) throw authError;
+  const user = session?.user;
   if (!user) return null;
 
   const { data: profile, error } = await supabase.from('profiles').select('*').eq('id', user.id).single();
