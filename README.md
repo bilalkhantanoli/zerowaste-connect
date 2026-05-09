@@ -60,6 +60,23 @@ This project is built with:
 - shadcn-ui
 - Tailwind CSS
 
+## Supabase setup
+
+1. Copy `.env.example` to `.env` and set:
+   - `VITE_SUPABASE_URL`
+   - `VITE_SUPABASE_ANON_KEY`
+2. Create a Supabase project.
+3. Run migrations:
+   - `supabase db push` (local/linked project)
+   - or run SQL files in `supabase/migrations/` in the SQL editor.
+4. Ensure Auth email confirmation and redirect settings match your app requirements.
+
+### Storage bucket
+
+- Bucket name: `donation-images` (created in migration)
+- Public read is enabled by policy.
+- Upload/delete is limited to the authenticated user's folder prefix.
+
 ## How can I deploy this project?
 
 Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.

@@ -161,9 +161,8 @@ export default function Login() {
               </Button>
             </form>
 
-            {/* Demo credentials hint */}
             <div className="mt-4 p-3 rounded-lg bg-muted/50 text-sm text-muted-foreground text-center">
-              <strong>Demo:</strong> Any email/password with selected role
+              Use your registered account credentials.
             </div>
           </CardContent>
 
