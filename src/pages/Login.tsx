@@ -4,7 +4,14 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Leaf, Loader2, Building2, Users, Bike, ShieldCheck } from 'lucide-react';
 import { toast } from 'sonner';
@@ -54,7 +61,7 @@ export default function Login() {
       toast.success('Welcome back!', {
         description: `Logged in as ${roleConfig[selectedRole].label}`,
       });
-      
+
       // Navigate to role-specific dashboard
       navigate(`/${selectedRole}`);
     } catch (error) {
@@ -67,13 +74,13 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-nature-gradient flex items-center justify-center p-4">
+    <div className="bg-nature-gradient flex min-h-screen items-center justify-center p-4">
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-hero-pattern opacity-30" />
 
       <div className="relative w-full max-w-md">
         {/* Logo */}
-        <Link to="/" className="flex items-center justify-center gap-2 mb-8">
+        <Link to="/" className="mb-8 flex items-center justify-center gap-2">
           <Leaf className="h-10 w-10 text-primary" />
           <span className="text-2xl font-bold">
             ZeroWaste<span className="text-primary">Connect</span>
@@ -83,22 +90,20 @@ export default function Login() {
         <Card variant="elevated" className="backdrop-blur-sm">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl">Welcome Back</CardTitle>
-            <CardDescription>
-              Sign in to continue making an impact
-            </CardDescription>
+            <CardDescription>Sign in to continue making an impact</CardDescription>
           </CardHeader>
 
           <CardContent>
             {/* Role Selection */}
             <div className="mb-6">
-              <Label className="text-sm font-medium mb-3 block">Sign in as</Label>
+              <Label className="mb-3 block text-sm font-medium">Sign in as</Label>
               <Tabs value={selectedRole} onValueChange={(v) => setSelectedRole(v as UserRole)}>
-                <TabsList className="grid grid-cols-4 h-auto p-1">
+                <TabsList className="grid h-auto grid-cols-4 p-1">
                   {Object.entries(roleConfig).map(([role, config]) => (
                     <TabsTrigger
                       key={role}
                       value={role}
-                      className={`flex flex-col items-center gap-1 py-2 px-2 ${config.color}`}
+                      className={`flex flex-col items-center gap-1 px-2 py-2 ${config.color}`}
                     >
                       <config.icon className="h-4 w-4" />
                       <span className="text-xs">{config.label}</span>
@@ -125,10 +130,7 @@ export default function Login() {
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <Label htmlFor="password">Password</Label>
-                  <Link
-                    to="/forgot-password"
-                    className="text-sm text-primary hover:underline"
-                  >
+                  <Link to="/forgot-password" className="text-sm text-primary hover:underline">
                     Forgot password?
                   </Link>
                 </div>
@@ -161,7 +163,7 @@ export default function Login() {
               </Button>
             </form>
 
-            <div className="mt-4 p-3 rounded-lg bg-muted/50 text-sm text-muted-foreground text-center">
+            <div className="mt-4 rounded-lg bg-muted/50 p-3 text-center text-sm text-muted-foreground">
               Use your registered account credentials.
             </div>
           </CardContent>

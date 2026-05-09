@@ -4,7 +4,14 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Leaf, Loader2, Building2, Users, Bike, CheckCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { UserRole } from '@/types';
@@ -40,9 +47,9 @@ export default function Register() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { register } = useAuth();
-  
+
   const initialRole = (searchParams.get('role') as UserRole) || 'donor';
-  
+
   const [step, setStep] = useState(1);
   const [selectedRole, setSelectedRole] = useState<UserRole>(initialRole);
   const [formData, setFormData] = useState({
@@ -100,12 +107,12 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen bg-nature-gradient flex items-center justify-center p-4">
+    <div className="bg-nature-gradient flex min-h-screen items-center justify-center p-4">
       <div className="absolute inset-0 bg-hero-pattern opacity-30" />
 
       <div className="relative w-full max-w-2xl">
         {/* Logo */}
-        <Link to="/" className="flex items-center justify-center gap-2 mb-8">
+        <Link to="/" className="mb-8 flex items-center justify-center gap-2">
           <Leaf className="h-10 w-10 text-primary" />
           <span className="text-2xl font-bold">
             ZeroWaste<span className="text-primary">Connect</span>
@@ -124,21 +131,31 @@ export default function Register() {
 
           <CardContent>
             {/* Progress Steps */}
-            <div className="flex items-center justify-center gap-3 mb-8">
-              <div className={`flex items-center gap-2 ${step >= 1 ? 'text-primary' : 'text-muted-foreground'}`}>
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= 1 ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>
+            <div className="mb-8 flex items-center justify-center gap-3">
+              <div
+                className={`flex items-center gap-2 ${step >= 1 ? 'text-primary' : 'text-muted-foreground'}`}
+              >
+                <div
+                  className={`flex h-8 w-8 items-center justify-center rounded-full ${step >= 1 ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}
+                >
                   1
                 </div>
-                <span className="text-sm font-medium hidden sm:block">Choose Role</span>
+                <span className="hidden text-sm font-medium sm:block">Choose Role</span>
               </div>
-              <div className="w-12 h-0.5 bg-muted">
-                <div className={`h-full bg-primary transition-all ${step >= 2 ? 'w-full' : 'w-0'}`} />
+              <div className="h-0.5 w-12 bg-muted">
+                <div
+                  className={`h-full bg-primary transition-all ${step >= 2 ? 'w-full' : 'w-0'}`}
+                />
               </div>
-              <div className={`flex items-center gap-2 ${step >= 2 ? 'text-primary' : 'text-muted-foreground'}`}>
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= 2 ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>
+              <div
+                className={`flex items-center gap-2 ${step >= 2 ? 'text-primary' : 'text-muted-foreground'}`}
+              >
+                <div
+                  className={`flex h-8 w-8 items-center justify-center rounded-full ${step >= 2 ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}
+                >
                   2
                 </div>
-                <span className="text-sm font-medium hidden sm:block">Your Details</span>
+                <span className="hidden text-sm font-medium sm:block">Your Details</span>
               </div>
             </div>
 
@@ -150,12 +167,12 @@ export default function Register() {
                     key={role}
                     type="button"
                     onClick={() => setSelectedRole(role as UserRole)}
-                    className={`w-full p-4 rounded-xl border-2 text-left transition-all ${
+                    className={`w-full rounded-xl border-2 p-4 text-left transition-all ${
                       selectedRole === role ? config.selectedColor : config.color
                     }`}
                   >
                     <div className="flex items-start gap-4">
-                      <div className="p-2 rounded-lg bg-background/80">
+                      <div className="rounded-lg bg-background/80 p-2">
                         <config.icon className="h-6 w-6" />
                       </div>
                       <div className="flex-1">
@@ -165,14 +182,14 @@ export default function Register() {
                             <CheckCircle className="h-5 w-5 text-primary" />
                           )}
                         </div>
-                        <p className="text-sm text-muted-foreground mt-1 mb-3">
+                        <p className="mb-3 mt-1 text-sm text-muted-foreground">
                           {config.description}
                         </p>
                         <div className="flex flex-wrap gap-2">
                           {config.benefits.map((benefit) => (
                             <span
                               key={benefit}
-                              className="text-xs px-2 py-1 rounded-full bg-background/80"
+                              className="rounded-full bg-background/80 px-2 py-1 text-xs"
                             >
                               {benefit}
                             </span>
@@ -183,12 +200,7 @@ export default function Register() {
                   </button>
                 ))}
 
-                <Button
-                  variant="hero"
-                  className="w-full mt-6"
-                  size="lg"
-                  onClick={() => setStep(2)}
-                >
+                <Button variant="hero" className="mt-6 w-full" size="lg" onClick={() => setStep(2)}>
                   Continue as {roleConfig[selectedRole].label}
                 </Button>
               </div>
@@ -314,7 +326,7 @@ export default function Register() {
           <CardFooter className="justify-center">
             <p className="text-sm text-muted-foreground">
               Already have an account?{' '}
-              <Link to="/login" className="text-primary font-medium hover:underline">
+              <Link to="/login" className="font-medium text-primary hover:underline">
                 Sign in
               </Link>
             </p>

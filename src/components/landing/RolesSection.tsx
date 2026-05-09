@@ -68,24 +68,25 @@ const roles = [
 
 export function RolesSection() {
   return (
-    <section className="py-20 lg:py-32 bg-background">
+    <section className="bg-background py-20 lg:py-32">
       <div className="container mx-auto px-4">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="text-sm font-semibold text-primary uppercase tracking-wider mb-4 block">
+        <div className="mx-auto mb-16 max-w-3xl text-center">
+          <span className="mb-4 block text-sm font-semibold uppercase tracking-wider text-primary">
             Join The Movement
           </span>
-          <h2 className="text-3xl md:text-5xl font-bold mb-6">
+          <h2 className="mb-6 text-3xl font-bold md:text-5xl">
             Everyone Has a Role in
             <span className="text-gradient"> Fighting Food Waste</span>
           </h2>
           <p className="text-lg text-muted-foreground">
-            Whether you have food to share, need assistance, or want to volunteer, there's a place for you.
+            Whether you have food to share, need assistance, or want to volunteer, there's a place
+            for you.
           </p>
         </div>
 
         {/* Roles Grid */}
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid gap-6 md:grid-cols-2">
           {roles.map((role) => (
             <Card
               key={role.title}
@@ -94,17 +95,17 @@ export function RolesSection() {
             >
               <CardHeader>
                 <div className="flex items-start gap-4">
-                  <div className={`p-3 rounded-xl ${role.iconBg}`}>
+                  <div className={`rounded-xl p-3 ${role.iconBg}`}>
                     <role.icon className="h-7 w-7" />
                   </div>
                   <div>
-                    <CardTitle className="text-xl mb-2">{role.title}</CardTitle>
+                    <CardTitle className="mb-2 text-xl">{role.title}</CardTitle>
                     <CardDescription className="text-sm">{role.description}</CardDescription>
                   </div>
                 </div>
               </CardHeader>
               <CardContent>
-                <ul className="space-y-3 mb-6">
+                <ul className="mb-6 space-y-3">
                   {role.features.map((feature) => (
                     <li key={feature} className="flex items-center gap-2 text-sm">
                       <div className="h-1.5 w-1.5 rounded-full bg-primary" />
@@ -112,10 +113,10 @@ export function RolesSection() {
                     </li>
                   ))}
                 </ul>
-                <Button variant="outline" className="w-full group" asChild>
+                <Button variant="outline" className="group w-full" asChild>
                   <Link to={role.href}>
                     {role.cta}
-                    <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                    <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                   </Link>
                 </Button>
               </CardContent>

@@ -4,38 +4,41 @@ import { ArrowRight, Sparkles } from 'lucide-react';
 
 export function CTASection() {
   return (
-    <section className="py-20 lg:py-32 relative overflow-hidden">
+    <section className="relative overflow-hidden py-20 lg:py-32">
       {/* Background */}
-      <div className="absolute inset-0 bg-hero-gradient opacity-95" />
+      <div className="bg-hero-gradient absolute inset-0 opacity-95" />
       <div className="absolute inset-0 bg-hero-pattern opacity-10" />
-      
-      {/* Floating elements */}
-      <div className="absolute top-10 left-10 w-32 h-32 bg-white/10 rounded-full blur-2xl animate-float" />
-      <div className="absolute bottom-10 right-10 w-48 h-48 bg-white/10 rounded-full blur-2xl animate-float-delayed" />
 
-      <div className="container mx-auto px-4 relative z-10">
-        <div className="max-w-3xl mx-auto text-center">
+      {/* Floating elements */}
+      <div className="animate-float absolute left-10 top-10 h-32 w-32 rounded-full bg-white/10 blur-2xl" />
+      <div className="animate-float-delayed absolute bottom-10 right-10 h-48 w-48 rounded-full bg-white/10 blur-2xl" />
+
+      <div className="container relative z-10 mx-auto px-4">
+        <div className="mx-auto max-w-3xl text-center">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm mb-8">
+          <div className="mb-8 inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-2 backdrop-blur-sm">
             <Sparkles className="h-4 w-4 text-white" />
-            <span className="text-sm font-medium text-white">Join 50,000+ members fighting food waste</span>
+            <span className="text-sm font-medium text-white">
+              Join 50,000+ members fighting food waste
+            </span>
           </div>
 
           {/* Headline */}
-          <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
+          <h2 className="mb-6 text-3xl font-bold text-white md:text-5xl lg:text-6xl">
             Ready to Make a Difference?
           </h2>
 
           {/* Description */}
-          <p className="text-lg md:text-xl text-white/80 mb-10 max-w-2xl mx-auto">
-            Every meal saved is a step towards a sustainable future. Join our community today and start creating real impact.
+          <p className="mx-auto mb-10 max-w-2xl text-lg text-white/80 md:text-xl">
+            Every meal saved is a step towards a sustainable future. Join our community today and
+            start creating real impact.
           </p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Button
               size="xl"
-              className="bg-white text-primary hover:bg-white/90 font-semibold shadow-elevated"
+              className="shadow-elevated bg-white font-semibold text-primary hover:bg-white/90"
               asChild
             >
               <Link to="/register">
@@ -46,12 +49,10 @@ export function CTASection() {
             <Button
               variant="outline"
               size="xl"
-              className="border-2 border-white/30 text-white hover:bg-white/10 bg-transparent"
+              className="border-2 border-white/30 bg-transparent text-white hover:bg-white/10"
               asChild
             >
-              <Link to="/contact">
-                Contact Sales
-              </Link>
+              <Link to="/contact">Contact Sales</Link>
             </Button>
           </div>
 

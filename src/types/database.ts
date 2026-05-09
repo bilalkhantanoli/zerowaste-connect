@@ -186,7 +186,13 @@ export type Database = {
       };
       community_tips: {
         Row: { id: string; icon: string; title: string; description: string; created_at: string };
-        Insert: { id?: string; icon: string; title: string; description: string; created_at?: string };
+        Insert: {
+          id?: string;
+          icon: string;
+          title: string;
+          description: string;
+          created_at?: string;
+        };
         Update: Partial<Database['public']['Tables']['community_tips']['Insert']>;
       };
       community_events: {
@@ -198,10 +204,16 @@ export type Database = {
           attendees: number;
           created_at: string;
         };
-        Insert: { id?: string; title: string; event_date: string; location: string; attendees?: number; created_at?: string };
+        Insert: {
+          id?: string;
+          title: string;
+          event_date: string;
+          location: string;
+          attendees?: number;
+          created_at?: string;
+        };
         Update: Partial<Database['public']['Tables']['community_events']['Insert']>;
       };
     };
   };
 };
-

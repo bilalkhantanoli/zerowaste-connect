@@ -1,31 +1,31 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate, Outlet, useLocation } from "react-router-dom";
-import { AuthProvider } from "@/contexts/AuthContext";
-import { useAuth } from "@/contexts/AuthContext";
-import type { UserRole } from "@/types";
+import { Toaster } from '@/components/ui/toaster';
+import { Toaster as Sonner } from '@/components/ui/sonner';
+import { TooltipProvider } from '@/components/ui/tooltip';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { BrowserRouter, Routes, Route, Navigate, Outlet, useLocation } from 'react-router-dom';
+import { AuthProvider } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/AuthContext';
+import type { UserRole } from '@/types';
 
 // Pages
-import Index from "./pages/Index";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Community from "./pages/Community";
-import NotFound from "./pages/NotFound";
+import Index from './pages/Index';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Community from './pages/Community';
+import NotFound from './pages/NotFound';
 
 // Donor Pages
-import DonorDashboard from "./pages/donor/DonorDashboard";
-import AddDonation from "./pages/donor/AddDonation";
+import DonorDashboard from './pages/donor/DonorDashboard';
+import AddDonation from './pages/donor/AddDonation';
 
 // Recipient Pages
-import RecipientDashboard from "./pages/recipient/RecipientDashboard";
+import RecipientDashboard from './pages/recipient/RecipientDashboard';
 
 // Volunteer Pages
-import VolunteerDashboard from "./pages/volunteer/VolunteerDashboard";
+import VolunteerDashboard from './pages/volunteer/VolunteerDashboard';
 
 // Admin Pages
-import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminDashboard from './pages/admin/AdminDashboard';
 
 const queryClient = new QueryClient();
 
@@ -34,7 +34,11 @@ function ProtectedRoute({ allowedRoles }: { allowedRoles: UserRole[] }) {
   const location = useLocation();
 
   if (isLoading) {
-    return <div className="min-h-screen grid place-items-center text-muted-foreground">Loading dashboard...</div>;
+    return (
+      <div className="grid min-h-screen place-items-center text-muted-foreground">
+        Loading dashboard...
+      </div>
+    );
   }
 
   if (!user) {
@@ -63,7 +67,7 @@ const App = () => (
             <Route path="/community" element={<Community />} />
 
             {/* Donor Routes */}
-            <Route element={<ProtectedRoute allowedRoles={["donor"]} />}>
+            <Route element={<ProtectedRoute allowedRoles={['donor']} />}>
               <Route path="/donor" element={<DonorDashboard />} />
               <Route path="/donor/add" element={<AddDonation />} />
               <Route path="/donor/donations" element={<DonorDashboard />} />
@@ -71,7 +75,7 @@ const App = () => (
             </Route>
 
             {/* Recipient Routes */}
-            <Route element={<ProtectedRoute allowedRoles={["recipient"]} />}>
+            <Route element={<ProtectedRoute allowedRoles={['recipient']} />}>
               <Route path="/recipient" element={<RecipientDashboard />} />
               <Route path="/recipient/browse" element={<RecipientDashboard />} />
               <Route path="/recipient/requests" element={<RecipientDashboard />} />
@@ -80,7 +84,7 @@ const App = () => (
             </Route>
 
             {/* Volunteer Routes */}
-            <Route element={<ProtectedRoute allowedRoles={["volunteer"]} />}>
+            <Route element={<ProtectedRoute allowedRoles={['volunteer']} />}>
               <Route path="/volunteer" element={<VolunteerDashboard />} />
               <Route path="/volunteer/deliveries" element={<VolunteerDashboard />} />
               <Route path="/volunteer/history" element={<VolunteerDashboard />} />
@@ -88,7 +92,7 @@ const App = () => (
             </Route>
 
             {/* Admin Routes */}
-            <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
+            <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
               <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/admin/users" element={<AdminDashboard />} />
               <Route path="/admin/donations" element={<AdminDashboard />} />

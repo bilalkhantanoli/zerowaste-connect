@@ -11,36 +11,45 @@ const stats = [
 
 export function HeroSection() {
   return (
-    <section className="relative overflow-hidden bg-nature-gradient">
+    <section className="bg-nature-gradient relative overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-hero-pattern opacity-50" />
-      
-      {/* Floating Elements */}
-      <div className="absolute top-20 left-10 w-64 h-64 bg-primary/10 rounded-full blur-3xl animate-float" />
-      <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent/10 rounded-full blur-3xl animate-float-delayed" />
 
-      <div className="container mx-auto px-4 py-20 lg:py-32 relative">
-        <div className="max-w-4xl mx-auto text-center">
+      {/* Floating Elements */}
+      <div className="animate-float absolute left-10 top-20 h-64 w-64 rounded-full bg-primary/10 blur-3xl" />
+      <div className="animate-float-delayed absolute bottom-20 right-10 h-96 w-96 rounded-full bg-accent/10 blur-3xl" />
+
+      <div className="container relative mx-auto px-4 py-20 lg:py-32">
+        <div className="mx-auto max-w-4xl text-center">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-8 animate-fade-in">
+          <div className="animate-fade-in mb-8 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-4 py-2">
             <Sparkles className="h-4 w-4 text-primary" />
             <span className="text-sm font-medium text-primary">Join 50,000+ community members</span>
           </div>
 
           {/* Headline */}
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 animate-slide-up" style={{ animationDelay: '0.1s' }}>
+          <h1
+            className="animate-slide-up mb-6 text-4xl font-bold md:text-6xl lg:text-7xl"
+            style={{ animationDelay: '0.1s' }}
+          >
             Turn Surplus Into
-            <span className="block text-gradient mt-2">Zero Waste</span>
+            <span className="text-gradient mt-2 block">Zero Waste</span>
           </h1>
 
           {/* Subheadline */}
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 animate-slide-up" style={{ animationDelay: '0.2s' }}>
-            Connect donors with those in need through smart food redistribution. 
-            Reduce waste, fight hunger, and build sustainable communities together.
+          <p
+            className="animate-slide-up mx-auto mb-10 max-w-2xl text-lg text-muted-foreground md:text-xl"
+            style={{ animationDelay: '0.2s' }}
+          >
+            Connect donors with those in need through smart food redistribution. Reduce waste, fight
+            hunger, and build sustainable communities together.
           </p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16 animate-slide-up" style={{ animationDelay: '0.3s' }}>
+          <div
+            className="animate-slide-up mb-16 flex flex-col items-center justify-center gap-4 sm:flex-row"
+            style={{ animationDelay: '0.3s' }}
+          >
             <Button variant="hero" size="xl" asChild>
               <Link to="/register">
                 Start Donating
@@ -56,23 +65,24 @@ export function HeroSection() {
           </div>
 
           {/* Stats Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 animate-slide-up" style={{ animationDelay: '0.4s' }}>
+          <div
+            className="animate-slide-up grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-8"
+            style={{ animationDelay: '0.4s' }}
+          >
             {stats.map((stat) => (
               <div
                 key={stat.label}
-                className="p-4 md:p-6 rounded-2xl bg-card/60 backdrop-blur-sm border border-border/50 shadow-soft hover:shadow-card transition-all duration-300 group"
+                className="shadow-soft group rounded-2xl border border-border/50 bg-card/60 p-4 backdrop-blur-sm transition-all duration-300 hover:shadow-card md:p-6"
               >
-                <div className="flex items-center justify-center mb-2">
-                  <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                <div className="mb-2 flex items-center justify-center">
+                  <div className="rounded-lg bg-primary/10 p-2 transition-colors group-hover:bg-primary/20">
                     <stat.icon className="h-5 w-5 text-primary" />
                   </div>
                 </div>
-                <div className="text-2xl md:text-3xl font-bold text-foreground mb-1">
+                <div className="mb-1 text-2xl font-bold text-foreground md:text-3xl">
                   {stat.value}
                 </div>
-                <div className="text-sm text-muted-foreground">
-                  {stat.label}
-                </div>
+                <div className="text-sm text-muted-foreground">{stat.label}</div>
               </div>
             ))}
           </div>

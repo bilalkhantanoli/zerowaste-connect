@@ -39,9 +39,11 @@ export function mapDonationRow(
     donor?: Pick<ProfileRow, 'name'> | null;
     category?: Database['public']['Tables']['food_categories']['Row'] | null;
     donation_images?: Database['public']['Tables']['donation_images']['Row'][] | null;
-  }
+  },
 ): Donation {
-  const imageUrls = (row.donation_images ?? []).map((img) => buildPublicUrl(img.path)).filter(Boolean) as string[];
+  const imageUrls = (row.donation_images ?? [])
+    .map((img) => buildPublicUrl(img.path))
+    .filter(Boolean) as string[];
 
   return {
     id: row.id,
@@ -71,4 +73,3 @@ export function mapDonationRow(
     updatedAt: new Date(row.updated_at),
   };
 }
-

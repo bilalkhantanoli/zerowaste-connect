@@ -3,17 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import {
-  Leaf,
-  Menu,
-  X,
-  Bell,
-  User,
-  LogOut,
-  Settings,
-  ChevronDown,
-  Home,
-} from 'lucide-react';
+import { Leaf, Menu, X, Bell, User, LogOut, Settings, ChevronDown, Home } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -42,11 +32,11 @@ export function DashboardLayout({ children, navItems, title }: DashboardLayoutPr
   const location = useLocation();
 
   return (
-    <div className="min-h-screen bg-muted/30 flex">
+    <div className="flex min-h-screen bg-muted/30">
       {/* Mobile Overlay */}
       {isSidebarOpen && (
         <div
-          className="fixed inset-0 bg-foreground/50 z-40 lg:hidden"
+          className="fixed inset-0 z-40 bg-foreground/50 lg:hidden"
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
@@ -54,13 +44,13 @@ export function DashboardLayout({ children, navItems, title }: DashboardLayoutPr
       {/* Sidebar */}
       <aside
         className={cn(
-          'fixed lg:sticky top-0 left-0 z-50 h-screen w-64 bg-card border-r transform transition-transform duration-200 ease-in-out',
-          isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+          'fixed left-0 top-0 z-50 h-screen w-64 transform border-r bg-card transition-transform duration-200 ease-in-out lg:sticky',
+          isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
         )}
       >
-        <div className="flex flex-col h-full">
+        <div className="flex h-full flex-col">
           {/* Logo */}
-          <div className="p-4 border-b">
+          <div className="border-b p-4">
             <Link to="/" className="flex items-center gap-2">
               <Leaf className="h-8 w-8 text-primary" />
               <span className="text-lg font-bold">
@@ -70,7 +60,7 @@ export function DashboardLayout({ children, navItems, title }: DashboardLayoutPr
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+          <nav className="flex-1 space-y-1 overflow-y-auto p-4">
             {navItems.map((item) => {
               const isActive = location.pathname === item.href;
               return (
@@ -79,10 +69,10 @@ export function DashboardLayout({ children, navItems, title }: DashboardLayoutPr
                   to={item.href}
                   onClick={() => setIsSidebarOpen(false)}
                   className={cn(
-                    'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
+                    'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
                     isActive
                       ? 'bg-primary text-primary-foreground'
-                      : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                      : 'text-muted-foreground hover:bg-muted hover:text-foreground',
                   )}
                 >
                   <item.icon className="h-5 w-5" />
@@ -98,14 +88,14 @@ export function DashboardLayout({ children, navItems, title }: DashboardLayoutPr
           </nav>
 
           {/* User Section */}
-          <div className="p-4 border-t">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+          <div className="border-t p-4">
+            <div className="mb-4 flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
                 <User className="h-5 w-5 text-primary" />
               </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium truncate">{user?.name}</p>
-                <p className="text-xs text-muted-foreground capitalize">{user?.role}</p>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-medium">{user?.name}</p>
+                <p className="text-xs capitalize text-muted-foreground">{user?.role}</p>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-2">
@@ -123,9 +113,9 @@ export function DashboardLayout({ children, navItems, title }: DashboardLayoutPr
       </aside>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col min-h-screen">
+      <div className="flex min-h-screen flex-1 flex-col">
         {/* Top Header */}
-        <header className="sticky top-0 z-30 h-16 bg-card/80 backdrop-blur-sm border-b flex items-center px-4 gap-4">
+        <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-card/80 px-4 backdrop-blur-sm">
           <Button
             variant="ghost"
             size="icon"
@@ -143,7 +133,7 @@ export function DashboardLayout({ children, navItems, title }: DashboardLayoutPr
             {/* Notifications */}
             <Button variant="ghost" size="icon" className="relative">
               <Bell className="h-5 w-5" />
-              <span className="absolute -top-1 -right-1 h-4 w-4 bg-urgent text-[10px] text-urgent-foreground rounded-full flex items-center justify-center">
+              <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-urgent text-[10px] text-urgent-foreground">
                 3
               </span>
             </Button>
@@ -158,9 +148,7 @@ export function DashboardLayout({ children, navItems, title }: DashboardLayoutPr
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 p-4 md:p-6 lg:p-8">
-          {children}
-        </main>
+        <main className="flex-1 p-4 md:p-6 lg:p-8">{children}</main>
       </div>
     </div>
   );

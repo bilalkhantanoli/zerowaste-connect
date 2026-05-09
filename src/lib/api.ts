@@ -11,7 +11,11 @@ export async function fetchCurrentUserProfile() {
   const user = session?.user;
   if (!user) return null;
 
-  const { data: profile, error } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+  const { data: profile, error } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', user.id)
+    .single();
   if (error) throw error;
   return mapProfileToUser(profile, user.email ?? '');
 }
@@ -44,7 +48,8 @@ export async function loginUser(email: string, password: string, selectedRole: U
 
   const profile = await fetchCurrentUserProfile();
   if (!profile) throw new Error('Profile not found for current user');
-  if (profile.role !== selectedRole) throw new Error(`Account is ${profile.role}, not ${selectedRole}`);
+  if (profile.role !== selectedRole)
+    throw new Error(`Account is ${profile.role}, not ${selectedRole}`);
   return profile;
 }
 
@@ -96,7 +101,7 @@ export async function createDonation(input: {
       input.imagePaths.map((path) => ({
         donation_id: donation.id,
         path,
-      }))
+      })),
     );
     if (imageError) throw imageError;
   }
@@ -106,7 +111,9 @@ export async function createDonation(input: {
 
 export async function uploadDonationImage(userId: string, file: File) {
   const path = `${userId}/${crypto.randomUUID()}-${file.name}`;
-  const { error } = await supabase.storage.from('donation-images').upload(path, file, { upsert: false });
+  const { error } = await supabase.storage
+    .from('donation-images')
+    .upload(path, file, { upsert: false });
   if (error) throw error;
   return path;
 }
@@ -114,7 +121,9 @@ export async function uploadDonationImage(userId: string, file: File) {
 export async function fetchDonorDonations(donorId: string) {
   const { data, error } = await supabase
     .from('donations')
-    .select('*, donor:profiles!donations_donor_id_fkey(name), category:food_categories(*), donation_images(*)')
+    .select(
+      '*, donor:profiles!donations_donor_id_fkey(name), category:food_categories(*), donation_images(*)',
+    )
     .eq('donor_id', donorId)
     .order('created_at', { ascending: false })
     .limit(20);
@@ -125,7 +134,9 @@ export async function fetchDonorDonations(donorId: string) {
 export async function fetchAvailableDonations() {
   const { data, error } = await supabase
     .from('donations')
-    .select('*, donor:profiles!donations_donor_id_fkey(name), category:food_categories(*), donation_images(*)')
+    .select(
+      '*, donor:profiles!donations_donor_id_fkey(name), category:food_categories(*), donation_images(*)',
+    )
     .eq('status', 'available')
     .order('created_at', { ascending: false });
   if (error) throw error;
@@ -135,7 +146,12 @@ export async function fetchAvailableDonations() {
 export async function requestDonation(donationId: string, recipientId: string) {
   const { error } = await supabase
     .from('food_requests')
-    .insert({ recipient_id: recipientId, quantity: 1, address: 'Pending location', notes: `Request for donation ${donationId}` });
+    .insert({
+      recipient_id: recipientId,
+      quantity: 1,
+      address: 'Pending location',
+      notes: `Request for donation ${donationId}`,
+    });
   if (error) throw error;
 }
 
@@ -143,7 +159,7 @@ export async function fetchVolunteerDeliveries(volunteerId: string) {
   const { data, error } = await supabase
     .from('deliveries')
     .select(
-      '*, donation:donations(*, category:food_categories(*), donor:profiles!donations_donor_id_fkey(name,phone,address)), recipient:profiles!deliveries_recipient_id_fkey(name,phone,address)'
+      '*, donation:donations(*, category:food_categories(*), donor:profiles!donations_donor_id_fkey(name,phone,address)), recipient:profiles!deliveries_recipient_id_fkey(name,phone,address)',
     )
     .eq('volunteer_id', volunteerId)
     .in('status', ['assigned', 'picking_up', 'in_transit'])
@@ -175,7 +191,11 @@ export async function fetchAdminMetrics() {
 
 export async function fetchCommunityContent() {
   const [stories, tips, events] = await Promise.all([
-    supabase.from('community_stories').select('*').order('published_at', { ascending: false }).limit(6),
+    supabase
+      .from('community_stories')
+      .select('*')
+      .order('published_at', { ascending: false })
+      .limit(6),
     supabase.from('community_tips').select('*').order('created_at', { ascending: false }),
     supabase.from('community_events').select('*').order('event_date', { ascending: true }).limit(6),
   ]);
@@ -184,4 +204,3 @@ export async function fetchCommunityContent() {
   if (events.error) throw events.error;
   return { stories: stories.data, tips: tips.data, events: events.data };
 }
-

@@ -48,38 +48,39 @@ const achievements = [
 
 export function ImpactSection() {
   return (
-    <section id="impact" className="py-20 lg:py-32 bg-muted/30">
+    <section id="impact" className="bg-muted/30 py-20 lg:py-32">
       <div className="container mx-auto px-4">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="text-sm font-semibold text-primary uppercase tracking-wider mb-4 block">
+        <div className="mx-auto mb-16 max-w-3xl text-center">
+          <span className="mb-4 block text-sm font-semibold uppercase tracking-wider text-primary">
             Our Impact
           </span>
-          <h2 className="text-3xl md:text-5xl font-bold mb-6">
+          <h2 className="mb-6 text-3xl font-bold md:text-5xl">
             Every Meal Counts,
             <span className="text-gradient"> Every Action Matters</span>
           </h2>
           <p className="text-lg text-muted-foreground">
-            Together, we're creating a sustainable food system that benefits communities and the planet.
+            Together, we're creating a sustainable food system that benefits communities and the
+            planet.
           </p>
         </div>
 
         {/* Impact Metrics Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+        <div className="mb-16 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           {impactMetrics.map((metric) => (
             <Card key={metric.label} variant="elevated" className="overflow-hidden">
               <CardContent className="p-6">
-                <div className="flex items-start justify-between mb-4">
-                  <div className={`p-3 rounded-xl ${metric.bgColor}`}>
+                <div className="mb-4 flex items-start justify-between">
+                  <div className={`rounded-xl p-3 ${metric.bgColor}`}>
                     <metric.icon className={`h-6 w-6 ${metric.color}`} />
                   </div>
-                  <div className="flex items-center gap-1 text-success text-sm font-medium">
+                  <div className="flex items-center gap-1 text-sm font-medium text-success">
                     <TrendingUp className="h-4 w-4" />
                     {metric.trend}
                   </div>
                 </div>
-                <div className="text-3xl font-bold mb-1">{metric.value}</div>
-                <div className="text-sm font-medium text-foreground mb-2">{metric.label}</div>
+                <div className="mb-1 text-3xl font-bold">{metric.value}</div>
+                <div className="mb-2 text-sm font-medium text-foreground">{metric.label}</div>
                 <p className="text-xs text-muted-foreground">{metric.description}</p>
               </CardContent>
             </Card>
@@ -87,11 +88,11 @@ export function ImpactSection() {
         </div>
 
         {/* Achievements */}
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid gap-6 md:grid-cols-3">
           {achievements.map((achievement) => (
             <Card key={achievement.title} className="bg-card-gradient border-primary/10">
-              <CardContent className="p-6 flex items-center gap-4">
-                <div className="p-3 rounded-xl bg-primary/10">
+              <CardContent className="flex items-center gap-4 p-6">
+                <div className="rounded-xl bg-primary/10 p-3">
                   <achievement.icon className="h-6 w-6 text-primary" />
                 </div>
                 <div>

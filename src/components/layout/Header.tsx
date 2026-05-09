@@ -2,16 +2,7 @@ import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
-import {
-  Leaf,
-  Menu,
-  X,
-  Bell,
-  User,
-  LogOut,
-  Settings,
-  ChevronDown,
-} from 'lucide-react';
+import { Leaf, Menu, X, Bell, User, LogOut, Settings, ChevronDown } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -50,13 +41,13 @@ export function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full glass-strong">
+    <header className="glass-strong sticky top-0 z-50 w-full">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 group">
+          <Link to="/" className="group flex items-center gap-2">
             <div className="relative">
-              <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full group-hover:bg-primary/30 transition-colors" />
+              <div className="absolute inset-0 rounded-full bg-primary/20 blur-xl transition-colors group-hover:bg-primary/30" />
               <Leaf className="relative h-8 w-8 text-primary" />
             </div>
             <span className="text-xl font-bold text-foreground">
@@ -65,12 +56,12 @@ export function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-6">
+          <nav className="hidden items-center gap-6 md:flex">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 to={item.href}
-                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
               >
                 {item.label}
               </Link>
@@ -78,13 +69,13 @@ export function Header() {
           </nav>
 
           {/* Desktop Actions */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden items-center gap-3 md:flex">
             {isAuthenticated ? (
               <>
                 {/* Notifications */}
                 <Button variant="ghost" size="icon" className="relative">
                   <Bell className="h-5 w-5" />
-                  <span className="absolute -top-1 -right-1 h-4 w-4 bg-urgent text-[10px] text-urgent-foreground rounded-full flex items-center justify-center">
+                  <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-urgent text-[10px] text-urgent-foreground">
                     3
                   </span>
                 </Button>
@@ -93,7 +84,7 @@ export function Header() {
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="flex items-center gap-2">
-                      <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
                         <User className="h-4 w-4 text-primary" />
                       </div>
                       <span className="max-w-[120px] truncate">{user?.name}</span>
@@ -122,7 +113,7 @@ export function Header() {
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={logout} className="text-destructive cursor-pointer">
+                    <DropdownMenuItem onClick={logout} className="cursor-pointer text-destructive">
                       <LogOut className="mr-2 h-4 w-4" />
                       Logout
                     </DropdownMenuItem>
@@ -155,19 +146,19 @@ export function Header() {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden glass-strong border-t animate-slide-up">
-          <div className="container mx-auto px-4 py-4 space-y-4">
+        <div className="glass-strong animate-slide-up border-t md:hidden">
+          <div className="container mx-auto space-y-4 px-4 py-4">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 to={item.href}
-                className="block text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                className="block text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {item.label}
               </Link>
             ))}
-            <div className="pt-4 border-t border-border space-y-2">
+            <div className="space-y-2 border-t border-border pt-4">
               {isAuthenticated ? (
                 <>
                   <Button variant="outline" className="w-full" asChild>
