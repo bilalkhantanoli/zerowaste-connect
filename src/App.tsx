@@ -13,6 +13,8 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Community from './pages/Community';
 import NotFound from './pages/NotFound';
+import PlaceholderPage from './pages/PlaceholderPage';
+import SettingsPage from './pages/Settings';
 
 // Donor Pages
 import DonorDashboard from './pages/donor/DonorDashboard';
@@ -65,6 +67,42 @@ const App = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/community" element={<Community />} />
+            <Route
+              path="/about"
+              element={
+                <PlaceholderPage
+                  title="About ZeroWaste Connect"
+                  description="About page is now available. You can replace this with your full content anytime."
+                />
+              }
+            />
+            <Route
+              path="/terms"
+              element={
+                <PlaceholderPage
+                  title="Terms of Service"
+                  description="Terms route is now active so registration links no longer break."
+                />
+              }
+            />
+            <Route
+              path="/privacy"
+              element={
+                <PlaceholderPage
+                  title="Privacy Policy"
+                  description="Privacy route is now active so registration links no longer break."
+                />
+              }
+            />
+            <Route
+              path="/forgot-password"
+              element={
+                <PlaceholderPage
+                  title="Forgot Password"
+                  description="Password reset screen route is now active. Integrate reset flow here next."
+                />
+              }
+            />
 
             {/* Donor Routes */}
             <Route element={<ProtectedRoute allowedRoles={['donor']} />}>
@@ -99,6 +137,11 @@ const App = () => (
               <Route path="/admin/deliveries" element={<AdminDashboard />} />
               <Route path="/admin/reports" element={<AdminDashboard />} />
               <Route path="/admin/settings" element={<AdminDashboard />} />
+            </Route>
+
+            {/* Shared authenticated routes */}
+            <Route element={<ProtectedRoute allowedRoles={['donor', 'recipient', 'volunteer', 'admin']} />}>
+              <Route path="/settings" element={<SettingsPage />} />
             </Route>
 
             {/* Catch-all */}

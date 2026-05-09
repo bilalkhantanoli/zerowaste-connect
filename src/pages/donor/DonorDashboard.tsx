@@ -185,6 +185,11 @@ export default function DonorDashboard() {
                   </div>
                 );
               })}
+              {recentDonations.length === 0 && (
+                <div className="rounded-xl bg-muted/30 p-8 text-center text-sm text-muted-foreground">
+                  No donations yet. Use "Add New Donation" to create your first listing.
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>

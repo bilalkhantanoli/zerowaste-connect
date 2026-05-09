@@ -170,6 +170,11 @@ export default function RecipientDashboard() {
               </Card>
             ))}
           </div>
+          {filteredDonations.length === 0 && (
+            <div className="py-10 text-center text-sm text-muted-foreground">
+              No matching donations found right now.
+            </div>
+          )}
         </CardContent>
       </Card>
     </DashboardLayout>

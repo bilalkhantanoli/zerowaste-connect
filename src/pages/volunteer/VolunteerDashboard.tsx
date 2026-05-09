@@ -140,6 +140,11 @@ export default function VolunteerDashboard() {
                 </button>
               );
             })}
+            {deliveries.length === 0 && (
+              <div className="rounded-xl bg-muted/30 p-8 text-center text-sm text-muted-foreground">
+                No active deliveries assigned yet.
+              </div>
+            )}
           </CardContent>
         </Card>
         {selected && (

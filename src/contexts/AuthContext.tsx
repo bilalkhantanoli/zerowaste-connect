@@ -32,15 +32,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const logout = useCallback(async () => {
-    await logoutUser();
-    setUser(null);
+    try {
+      await logoutUser();
+    } finally {
+      setUser(null);
+    }
   }, []);
 
   const register = useCallback(async (data: RegisterData) => {
     await registerUser(data);
-    const profile = await fetchCurrentUserProfile();
-    setUser(profile);
-    return profile;
+    for (let attempt = 0; attempt < 4; attempt += 1) {
+      const profile = await fetchCurrentUserProfile();
+      if (profile) {
+        setUser(profile);
+        return profile;
+      }
+      await new Promise((resolve) => setTimeout(resolve, 300));
+    }
+    setUser(null);
+    return null;
   }, []);
 
   useEffect(() => {
