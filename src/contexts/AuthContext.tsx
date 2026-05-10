@@ -41,6 +41,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  const syncUserFromSession = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const profile = await fetchCurrentUserProfile();
+      setUser(profile);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
   const login = useCallback(async (email: string, password: string, role: UserRole) => {
     const profile = await loginUser(email, password, role);
     setUser(profile);
@@ -69,21 +79,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const init = async () => {
       try {
-        const profile = await fetchCurrentUserProfile();
-        if (mounted) setUser(profile);
+        await syncUserFromSession();
       } finally {
-        if (mounted) setIsLoading(false);
+        if (!mounted) return;
       }
     };
 
     init();
 
-    const { data } = supabase.auth.onAuthStateChange((_, session) => {
+    const { data } = supabase.auth.onAuthStateChange((event, session) => {
       if (!mounted) return;
-      if (!session?.user) {
+      if (event === 'SIGNED_OUT' || !session?.user) {
         setUser(null);
+        setIsLoading(false);
         return;
       }
+
+      setIsLoading(true);
 
       // Avoid async deadlocks inside Supabase auth callback.
       setTimeout(async () => {
@@ -92,7 +104,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           const profile = await fetchCurrentUserProfile();
           if (mounted) setUser(profile);
         } catch {
-          if (mounted) setUser(null);
+          // Keep the current session user in place if profile refresh fails transiently.
+        } finally {
+          if (mounted) setIsLoading(false);
         }
       }, 0);
     });
