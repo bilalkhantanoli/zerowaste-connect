@@ -16,6 +16,9 @@ import NotFound from './pages/NotFound';
 import PlaceholderPage from './pages/PlaceholderPage';
 import SettingsPage from './pages/Settings';
 import NotificationsPage from './pages/Notifications';
+import TermsPage from './pages/Terms';
+import PrivacyPage from './pages/Privacy';
+import ForgotPasswordPage from './pages/ForgotPassword';
 
 // Donor Pages
 import DonorDashboard from './pages/donor/DonorDashboard';
@@ -79,30 +82,15 @@ const App = () => (
             />
             <Route
               path="/terms"
-              element={
-                <PlaceholderPage
-                  title="Terms of Service"
-                  description="Terms route is now active so registration links no longer break."
-                />
-              }
+              element={<TermsPage />}
             />
             <Route
               path="/privacy"
-              element={
-                <PlaceholderPage
-                  title="Privacy Policy"
-                  description="Privacy route is now active so registration links no longer break."
-                />
-              }
+              element={<PrivacyPage />}
             />
             <Route
               path="/forgot-password"
-              element={
-                <PlaceholderPage
-                  title="Forgot Password"
-                  description="Password reset screen route is now active. Integrate reset flow here next."
-                />
-              }
+              element={<ForgotPasswordPage />}
             />
 
             {/* Donor Routes */}

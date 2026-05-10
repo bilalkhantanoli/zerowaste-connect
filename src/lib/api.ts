@@ -300,7 +300,6 @@ export async function fetchVolunteerDeliveries(volunteerId: string) {
       '*, donation:donations(*, category:food_categories(*), donor:profiles!donations_donor_id_fkey(name,phone,address)), recipient:profiles!deliveries_recipient_id_fkey(name,phone,address)',
     )
     .eq('volunteer_id', volunteerId)
-    .in('status', ['assigned', 'picking_up', 'in_transit'])
     .order('created_at', { ascending: false });
   if (error) throw error;
   return data;
