@@ -235,6 +235,64 @@ export async function requestDonation(donationId: string, recipientId: string) {
   if (error) throw error;
 }
 
+function extractDonationIdFromRequestNotes(notes: string | null) {
+  if (!notes) return null;
+  const match = notes.match(/Request for donation ([0-9a-f-]+)/i);
+  return match?.[1] ?? null;
+}
+
+export async function fetchRecipientRequests(recipientId: string) {
+  const { data: requests, error } = await supabase
+    .from('food_requests')
+    .select('*')
+    .eq('recipient_id', recipientId)
+    .order('created_at', { ascending: false });
+  if (error) throw error;
+
+  const donationIds = Array.from(
+    new Set(
+      requests
+        .map((request) => extractDonationIdFromRequestNotes(request.notes))
+        .filter((id): id is string => Boolean(id)),
+    ),
+  );
+
+  const donationsById = new Map<string, ReturnType<typeof mapDonationRow>>();
+  if (donationIds.length > 0) {
+    const { data: donations, error: donationsError } = await supabase
+      .from('donations')
+      .select(
+        '*, donor:profiles!donations_donor_id_fkey(name), category:food_categories(*), donation_images(*)',
+      )
+      .in('id', donationIds);
+    if (donationsError) throw donationsError;
+    donations.forEach((donation) => {
+      donationsById.set(donation.id, mapDonationRow(donation));
+    });
+  }
+
+  return requests.map((request) => {
+    const donationId = extractDonationIdFromRequestNotes(request.notes);
+    return {
+      ...request,
+      donationId,
+      donation: donationId ? donationsById.get(donationId) : undefined,
+    };
+  });
+}
+
+export async function fetchRecipientDeliveries(recipientId: string) {
+  const { data, error } = await supabase
+    .from('deliveries')
+    .select(
+      '*, donation:donations(*, category:food_categories(*), donor:profiles!donations_donor_id_fkey(name,phone,address)), volunteer:profiles!deliveries_volunteer_id_fkey(name,phone,address))',
+    )
+    .eq('recipient_id', recipientId)
+    .order('created_at', { ascending: false });
+  if (error) throw error;
+  return data;
+}
+
 export async function fetchVolunteerDeliveries(volunteerId: string) {
   const { data, error } = await supabase
     .from('deliveries')

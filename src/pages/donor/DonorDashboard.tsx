@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout';
 import { StatsCard } from '@/components/dashboard/StatsCard';
@@ -39,6 +39,7 @@ const statusConfig = {
 };
 
 export default function DonorDashboard() {
+  const location = useLocation();
   const { user } = useAuth();
   const { data: recentDonations = [] } = useQuery({
     queryKey: ['donor-donations', user?.id],
@@ -50,18 +51,107 @@ export default function DonorDashboard() {
   const activeDonations = recentDonations.filter((d) =>
     ['available', 'matched', 'in_transit', 'reserved'].includes(d.status),
   ).length;
+  const completedDonations = recentDonations.filter((d) =>
+    ['delivered', 'expired'].includes(d.status),
+  );
   const mealsSaved = recentDonations.reduce((sum, d) => sum + d.quantity, 0);
 
-  return (
-    <DashboardLayout navItems={navItems} title="Donor Dashboard">
-      <div className="mb-8">
-        <h2 className="mb-2 text-2xl font-bold">Welcome back, {user?.name ?? 'Donor'}!</h2>
-        <p className="text-muted-foreground">
+  const pageConfig = {
+    '/donor': {
+      title: 'Donor Dashboard',
+      heading: `Welcome back, ${user?.name ?? 'Donor'}!`,
+      description: (
+        <>
           You currently have{' '}
           <span className="font-semibold text-primary">{activeDonations} active donations</span>.
-        </p>
-      </div>
+        </>
+      ),
+    },
+    '/donor/donations': {
+      title: 'My Donations',
+      heading: 'My Donations',
+      description: 'View and track all of your active and recent donation listings.',
+    },
+    '/donor/history': {
+      title: 'Donation History',
+      heading: 'History',
+      description: 'Review completed donations and your cumulative impact.',
+    },
+  } as const;
 
+  const currentPage =
+    pageConfig[location.pathname as keyof typeof pageConfig] ?? pageConfig['/donor'];
+
+  const renderDonationList = (donations: typeof recentDonations, emptyMessage: string) => (
+    <Card variant="elevated">
+      <CardHeader>
+        <CardTitle>{currentPage.heading}</CardTitle>
+        <CardDescription>{currentPage.description}</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-4">
+          {donations.map((donation) => {
+            const status = statusConfig[donation.status];
+            const expiryHours = Math.round(
+              (donation.expiryDate.getTime() - Date.now()) / (1000 * 60 * 60),
+            );
+
+            return (
+              <div
+                key={donation.id}
+                className="flex items-start gap-4 rounded-xl bg-muted/30 p-4 transition-colors hover:bg-muted/50"
+              >
+                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-2xl">
+                  {donation.category.icon}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <h4 className="font-medium">{donation.title}</h4>
+                      <p className="text-sm text-muted-foreground">
+                        {donation.quantity} {donation.unit}
+                      </p>
+                    </div>
+                    <Badge variant={status.variant}>{status.label}</Badge>
+                  </div>
+                  <div className="mt-2 flex items-center gap-4 text-xs text-muted-foreground">
+                    <span className="flex items-center gap-1">
+                      <MapPin className="h-3 w-3" />
+                      {donation.location.city}
+                    </span>
+                    <span
+                      className={`flex items-center gap-1 ${expiryHours < 12 ? 'text-urgent' : ''}`}
+                    >
+                      <Calendar className="h-3 w-3" />
+                      {expiryHours < 24
+                        ? `${expiryHours}h left`
+                        : `${Math.round(expiryHours / 24)}d left`}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex gap-1">
+                  <Button variant="ghost" size="icon" className="h-8 w-8">
+                    <Edit className="h-4 w-4" />
+                  </Button>
+                  <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive">
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            );
+          })}
+          {donations.length === 0 && (
+            <div className="rounded-xl bg-muted/30 p-8 text-center text-sm text-muted-foreground">
+              {emptyMessage}
+            </div>
+          )}
+        </div>
+      </CardContent>
+    </Card>
+  );
+
+  const renderOverview = () => (
+    <>
       <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatsCard
           title="Total Donations"
@@ -136,7 +226,7 @@ export default function DonorDashboard() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {recentDonations.map((donation) => {
+              {recentDonations.slice(0, 5).map((donation) => {
                 const status = statusConfig[donation.status];
                 const expiryHours = Math.round(
                   (donation.expiryDate.getTime() - Date.now()) / (1000 * 60 * 60),
@@ -194,6 +284,73 @@ export default function DonorDashboard() {
           </CardContent>
         </Card>
       </div>
+    </>
+  );
+
+  const renderAllDonations = () =>
+    renderDonationList(
+      recentDonations,
+      'No donations yet. Use "Add New Donation" to create your first listing.',
+    );
+
+  const renderHistory = () => (
+    <div className="grid gap-6">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <StatsCard
+          title="Completed Donations"
+          value={completedDonations.length}
+          description="Delivered or expired"
+          icon={TrendingUp}
+          color="primary"
+        />
+        <StatsCard
+          title="Meals Saved"
+          value={mealsSaved}
+          description="Lifetime quantity"
+          icon={Users}
+          color="success"
+        />
+        <StatsCard
+          title="CO2 Reduced"
+          value={`${Math.round(mealsSaved * 0.33)}kg`}
+          description="Estimated impact"
+          icon={Leaf}
+          color="accent"
+        />
+        <StatsCard
+          title="Active Donations"
+          value={activeDonations}
+          description="Still in progress"
+          icon={Clock}
+          color="urgent"
+        />
+      </div>
+      {renderDonationList(
+        completedDonations,
+        'No completed donation history yet. Delivered and expired donations will appear here.',
+      )}
+    </div>
+  );
+
+  const renderContent = () => {
+    switch (location.pathname) {
+      case '/donor/donations':
+        return renderAllDonations();
+      case '/donor/history':
+        return renderHistory();
+      case '/donor':
+      default:
+        return renderOverview();
+    }
+  };
+
+  return (
+    <DashboardLayout navItems={navItems} title={currentPage.title}>
+      <div className="mb-8">
+        <h2 className="mb-2 text-2xl font-bold">{currentPage.heading}</h2>
+        <p className="text-muted-foreground">{currentPage.description}</p>
+      </div>
+      {renderContent()}
     </DashboardLayout>
   );
 }
