@@ -15,6 +15,7 @@ import Community from './pages/Community';
 import NotFound from './pages/NotFound';
 import PlaceholderPage from './pages/PlaceholderPage';
 import SettingsPage from './pages/Settings';
+import NotificationsPage from './pages/Notifications';
 
 // Donor Pages
 import DonorDashboard from './pages/donor/DonorDashboard';
@@ -142,6 +143,7 @@ const App = () => (
             {/* Shared authenticated routes */}
             <Route element={<ProtectedRoute allowedRoles={['donor', 'recipient', 'volunteer', 'admin']} />}>
               <Route path="/settings" element={<SettingsPage />} />
+              <Route path="/notifications" element={<NotificationsPage />} />
             </Route>
 
             {/* Catch-all */}

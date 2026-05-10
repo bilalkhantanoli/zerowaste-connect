@@ -1,6 +1,12 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { User, UserRole } from '@/types';
-import { fetchCurrentUserProfile, loginUser, logoutUser, registerUser } from '@/lib/api';
+import {
+  fetchCurrentUserProfile,
+  loginUser,
+  logoutUser,
+  registerUser,
+  updateCurrentUserProfile,
+} from '@/lib/api';
 import { supabase } from '@/integrations/supabase/client';
 
 interface AuthContextType {
@@ -10,6 +16,7 @@ interface AuthContextType {
   login: (email: string, password: string, role: UserRole) => Promise<void>;
   logout: () => Promise<void>;
   register: (data: RegisterData) => Promise<User | null>;
+  updateProfile: (data: UpdateProfileData) => Promise<User>;
 }
 
 interface RegisterData {
@@ -18,6 +25,14 @@ interface RegisterData {
   name: string;
   role: UserRole;
   phone?: string;
+}
+
+interface UpdateProfileData {
+  name: string;
+  phone?: string;
+  address?: string;
+  city?: string;
+  country?: string;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -41,6 +56,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const register = useCallback(async (data: RegisterData) => {
     return registerUser(data);
+  }, []);
+
+  const updateProfile = useCallback(async (data: UpdateProfileData) => {
+    const profile = await updateCurrentUserProfile(data);
+    setUser(profile);
+    return profile;
   }, []);
 
   useEffect(() => {
@@ -91,6 +112,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         login,
         logout,
         register,
+        updateProfile,
       }}
     >
       {children}

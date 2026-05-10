@@ -3,14 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Leaf, Menu, X, Bell, User, LogOut, Settings, ChevronDown, Home } from 'lucide-react';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { Leaf, Menu, X, Bell, User, LogOut, Home } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface NavItem {
@@ -98,12 +91,7 @@ export function DashboardLayout({ children, navItems, title }: DashboardLayoutPr
                 <p className="text-xs capitalize text-muted-foreground">{user?.role}</p>
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-2">
-              <Button variant="outline" size="sm" asChild>
-                <Link to="/settings">
-                  <Settings className="h-4 w-4" />
-                </Link>
-              </Button>
+            <div className="grid grid-cols-1 gap-2">
               <Button variant="outline" size="sm" onClick={logout}>
                 <LogOut className="h-4 w-4" />
               </Button>
@@ -131,11 +119,13 @@ export function DashboardLayout({ children, navItems, title }: DashboardLayoutPr
 
           <div className="flex items-center gap-2">
             {/* Notifications */}
-            <Button variant="ghost" size="icon" className="relative">
-              <Bell className="h-5 w-5" />
-              <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-urgent text-[10px] text-urgent-foreground">
-                3
-              </span>
+            <Button variant="ghost" size="icon" className="relative" asChild>
+              <Link to="/notifications">
+                <Bell className="h-5 w-5" />
+                <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-urgent text-[10px] text-urgent-foreground">
+                  3
+                </span>
+              </Link>
             </Button>
 
             {/* Home Link */}

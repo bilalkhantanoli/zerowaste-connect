@@ -73,11 +73,13 @@ export function Header() {
             {isAuthenticated ? (
               <>
                 {/* Notifications */}
-                <Button variant="ghost" size="icon" className="relative">
-                  <Bell className="h-5 w-5" />
-                  <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-urgent text-[10px] text-urgent-foreground">
-                    3
-                  </span>
+                <Button variant="ghost" size="icon" className="relative" asChild>
+                  <Link to="/notifications">
+                    <Bell className="h-5 w-5" />
+                    <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-urgent text-[10px] text-urgent-foreground">
+                      3
+                    </span>
+                  </Link>
                 </Button>
 
                 {/* User Menu */}

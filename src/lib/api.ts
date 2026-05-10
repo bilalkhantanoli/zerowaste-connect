@@ -95,17 +95,6 @@ export async function loginUser(email: string, password: string, selectedRole: U
   const { error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) throw error;
 
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-  if (session?.user) {
-    await ensureProfile({
-      id: session.user.id,
-      email: session.user.email,
-      user_metadata: session.user.user_metadata as Record<string, unknown>,
-    });
-  }
-
   const profile = await fetchCurrentUserProfile();
   if (!profile) throw new Error('Profile not found for current user');
   if (profile.role !== selectedRole)
@@ -116,6 +105,37 @@ export async function loginUser(email: string, password: string, selectedRole: U
 export async function logoutUser() {
   const { error } = await supabase.auth.signOut();
   if (error) throw error;
+}
+
+export async function updateCurrentUserProfile(input: {
+  name: string;
+  phone?: string;
+  address?: string;
+  city?: string;
+  country?: string;
+}) {
+  const {
+    data: { session },
+    error: authError,
+  } = await supabase.auth.getSession();
+  if (authError) throw authError;
+  const user = session?.user;
+  if (!user) throw new Error('You must be signed in to update your profile');
+
+  const payload = {
+    name: input.name,
+    phone: input.phone?.trim() || null,
+    address: input.address?.trim() || null,
+    city: input.city?.trim() || null,
+    country: input.country?.trim() || 'USA',
+  };
+
+  const { error } = await supabase.from('profiles').update(payload).eq('id', user.id);
+  if (error) throw error;
+
+  const profile = await fetchCurrentUserProfile();
+  if (!profile) throw new Error('Profile not found after update');
+  return profile;
 }
 
 export async function fetchFoodCategories() {
@@ -230,9 +250,9 @@ export async function fetchVolunteerDeliveries(volunteerId: string) {
 
 export async function fetchAdminMetrics() {
   const [profiles, donations, deliveries, topDonors] = await Promise.all([
-    supabase.from('profiles').select('id, role'),
-    supabase.from('donations').select('id, status, donor_id, created_at'),
-    supabase.from('deliveries').select('id, status, created_at'),
+    supabase.from('profiles').select('id, role, name, created_at'),
+    supabase.from('donations').select('id, title, status, donor_id, created_at'),
+    supabase.from('deliveries').select('id, donation_id, volunteer_id, recipient_id, status, created_at'),
     supabase.from('donations').select('donor_id').limit(1000),
   ]);
 

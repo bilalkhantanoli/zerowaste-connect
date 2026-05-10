@@ -1,7 +1,7 @@
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { LayoutDashboard, Settings as SettingsIcon } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { ProfileSettingsContent } from '@/components/settings/ProfileSettingsContent';
 
 export default function SettingsPage() {
   const { user } = useAuth();
@@ -13,16 +13,11 @@ export default function SettingsPage() {
 
   return (
     <DashboardLayout navItems={navItems} title="Settings">
-      <Card variant="elevated" className="max-w-2xl">
-        <CardHeader>
-          <CardTitle>Settings</CardTitle>
-          <CardDescription>Account settings screen is now routed correctly.</CardDescription>
-        </CardHeader>
-        <CardContent className="text-sm text-muted-foreground">
-          Profile settings can be expanded here without breaking navigation.
-        </CardContent>
-      </Card>
+      <div className="mb-8">
+        <h2 className="mb-2 text-2xl font-bold">Account Settings</h2>
+        <p className="text-muted-foreground">Update the profile details shown across your account.</p>
+      </div>
+      <ProfileSettingsContent />
     </DashboardLayout>
   );
 }
-
