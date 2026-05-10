@@ -2,7 +2,6 @@ import { useQuery } from '@tanstack/react-query';
 import { useLocation } from 'react-router-dom';
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout';
 import { StatsCard } from '@/components/dashboard/StatsCard';
-import { ProfileSettingsContent } from '@/components/settings/ProfileSettingsContent';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -21,7 +20,6 @@ import {
   AlertTriangle,
   FileText,
   Settings,
-  ShieldCheck,
   Building2,
   Bike,
   Heart,
@@ -65,8 +63,8 @@ const pageConfig = {
   },
   '/admin/settings': {
     title: 'Admin Settings',
-    heading: 'Account Settings',
-    description: 'Update the profile details shown across your admin account.',
+    heading: 'Platform Settings',
+    description: 'View the core platform controls and current policy defaults.',
   },
 } as const;
 
@@ -216,7 +214,7 @@ export default function AdminDashboard() {
         <StatsCard title="All Users" value={profiles.length} description="Registered accounts" icon={Users} color="primary" />
         <StatsCard title="Donors" value={usersByRole.donor ?? 0} description="Food providers" icon={Building2} color="success" />
         <StatsCard title="Recipients" value={usersByRole.recipient ?? 0} description="Receiving organizations" icon={Heart} color="accent" />
-        <StatsCard title="Admins" value={usersByRole.admin ?? 0} description="Platform managers" icon={ShieldCheck} color="urgent" />
+        <StatsCard title="Admins" value={usersByRole.admin ?? 0} description="Platform managers" icon={Settings} color="urgent" />
       </div>
       <Card variant="elevated">
         <CardHeader>
@@ -396,7 +394,50 @@ export default function AdminDashboard() {
     </div>
   );
 
-  const renderSettings = () => <ProfileSettingsContent />;
+  const renderSettings = () => (
+    <div className="grid gap-6 lg:grid-cols-2">
+      <Card variant="elevated">
+        <CardHeader>
+          <CardTitle>Platform Access</CardTitle>
+          <CardDescription>Current access model reflected by the app configuration</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="rounded-lg bg-muted/30 p-4">
+            <p className="font-medium">Admin login</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Admins authenticate with the same email and password as regular users, with access controlled by the `profiles.role` value.
+            </p>
+          </div>
+          <div className="rounded-lg bg-muted/30 p-4">
+            <p className="font-medium">Protected routes</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Admin routes are currently restricted to users whose role resolves to `admin` after login.
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+      <Card variant="elevated">
+        <CardHeader>
+          <CardTitle>Quick Settings Snapshot</CardTitle>
+          <CardDescription>Read-only summary for the current build</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex items-center justify-between rounded-lg border p-3">
+            <span>Email confirmation aware signup</span>
+            <Badge variant="secondary">Enabled</Badge>
+          </div>
+          <div className="flex items-center justify-between rounded-lg border p-3">
+            <span>Shared account settings route</span>
+            <Badge variant="secondary">/settings</Badge>
+          </div>
+          <div className="flex items-center justify-between rounded-lg border p-3">
+            <span>Admin sidebar destinations</span>
+            <Badge variant="secondary">Working</Badge>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
 
   const renderContent = () => {
     switch (location.pathname) {
