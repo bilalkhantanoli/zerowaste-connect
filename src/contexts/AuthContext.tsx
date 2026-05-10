@@ -40,17 +40,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const register = useCallback(async (data: RegisterData) => {
-    await registerUser(data);
-    for (let attempt = 0; attempt < 4; attempt += 1) {
-      const profile = await fetchCurrentUserProfile();
-      if (profile) {
-        setUser(profile);
-        return profile;
-      }
-      await new Promise((resolve) => setTimeout(resolve, 300));
-    }
-    setUser(null);
-    return null;
+    return registerUser(data);
   }, []);
 
   useEffect(() => {
@@ -67,19 +57,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     init();
 
-    const { data } = supabase.auth.onAuthStateChange(async (_, session) => {
+    const { data } = supabase.auth.onAuthStateChange((_, session) => {
       if (!mounted) return;
       if (!session?.user) {
         setUser(null);
         return;
       }
 
-      try {
-        const profile = await fetchCurrentUserProfile();
-        if (mounted) setUser(profile);
-      } catch {
-        if (mounted) setUser(null);
-      }
+      // Avoid async deadlocks inside Supabase auth callback.
+      setTimeout(async () => {
+        if (!mounted) return;
+        try {
+          const profile = await fetchCurrentUserProfile();
+          if (mounted) setUser(profile);
+        } catch {
+          if (mounted) setUser(null);
+        }
+      }, 0);
     });
 
     return () => {

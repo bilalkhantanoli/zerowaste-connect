@@ -2,6 +2,28 @@ import { supabase } from '@/integrations/supabase/client';
 import { mapDonationRow, mapProfileToUser } from '@/lib/supabase-mappers';
 import type { UserRole } from '@/types';
 
+async function ensureProfile(user: {
+  id: string;
+  email?: string | null;
+  user_metadata?: Record<string, unknown>;
+}) {
+  const metadata = user.user_metadata ?? {};
+  const role = (metadata.role as UserRole) ?? 'donor';
+  const name = (metadata.name as string) ?? ((user.email ?? 'User').split('@')[0] || 'User');
+  const phone = (metadata.phone as string) ?? null;
+
+  const { error } = await supabase.from('profiles').upsert(
+    {
+      id: user.id,
+      role,
+      name,
+      phone,
+    },
+    { onConflict: 'id' },
+  );
+  if (error) throw error;
+}
+
 export async function fetchCurrentUserProfile() {
   const {
     data: { session },
@@ -16,7 +38,20 @@ export async function fetchCurrentUserProfile() {
     .select('*')
     .eq('id', user.id)
     .single();
-  if (error) throw error;
+
+  if (error) {
+    if ((error as { code?: string }).code === 'PGRST116') {
+      await ensureProfile(user);
+      const { data: retryProfile, error: retryError } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+      if (retryError) throw retryError;
+      return mapProfileToUser(retryProfile, user.email ?? '');
+    }
+    throw error;
+  }
   return mapProfileToUser(profile, user.email ?? '');
 }
 
@@ -39,12 +74,37 @@ export async function registerUser(input: {
     },
   });
   if (error) throw error;
-  return data.user;
+
+  // If email confirmation is required, signUp can succeed without creating a
+  // client session. In that case the DB trigger creates the profile row, and a
+  // client-side upsert would fail against RLS despite the account being valid.
+  if (!data.session?.user) {
+    return null;
+  }
+
+  await ensureProfile({
+    id: data.session.user.id,
+    email: data.session.user.email,
+    user_metadata: data.session.user.user_metadata as Record<string, unknown>,
+  });
+
+  return fetchCurrentUserProfile();
 }
 
 export async function loginUser(email: string, password: string, selectedRole: UserRole) {
   const { error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) throw error;
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  if (session?.user) {
+    await ensureProfile({
+      id: session.user.id,
+      email: session.user.email,
+      user_metadata: session.user.user_metadata as Record<string, unknown>,
+    });
+  }
 
   const profile = await fetchCurrentUserProfile();
   if (!profile) throw new Error('Profile not found for current user');

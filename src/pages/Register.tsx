@@ -76,13 +76,18 @@ export default function Register() {
     setIsLoading(true);
 
     try {
-      const profile = await register({
-        email: formData.email,
-        password: formData.password,
-        name: formData.name,
-        phone: formData.phone,
-        role: selectedRole,
-      });
+      const profile = await Promise.race([
+        register({
+          email: formData.email,
+          password: formData.password,
+          name: formData.name,
+          phone: formData.phone,
+          role: selectedRole,
+        }),
+        new Promise<null>((_, reject) =>
+          setTimeout(() => reject(new Error('Registration timeout')), 12000),
+        ),
+      ]);
 
       if (!profile) {
         toast.success('Account created successfully!', {
@@ -98,8 +103,9 @@ export default function Register() {
 
       navigate(`/${selectedRole}`);
     } catch (error) {
+      const message = error instanceof Error ? error.message : 'Please try again later.';
       toast.error('Registration failed', {
-        description: 'Please try again later.',
+        description: message,
       });
     } finally {
       setIsLoading(false);
