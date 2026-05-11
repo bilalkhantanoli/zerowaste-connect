@@ -1,0 +1,37 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="95" fill="#10b981" opacity="0.1" stroke="#10b981" stroke-width="2"/>
+  
+  <!-- System gears -->
+  <g transform="translate(60, 80)">
+    <!-- Left gear -->
+    <circle cx="0" cy="0" r="15" fill="none" stroke="#10b981" stroke-width="2"/>
+    <circle cx="0" cy="0" r="8" fill="#10b981"/>
+    <rect x="-2" y="-18" width="4" height="6" fill="#10b981"/>
+    <rect x="-2" y="12" width="4" height="6" fill="#10b981"/>
+    <rect x="-18" y="-2" width="6" height="4" fill="#10b981"/>
+    <rect x="12" y="-2" width="6" height="4" fill="#10b981"/>
+  </g>
+  
+  <g transform="translate(100, 100)">
+    <!-- Center gear (larger) -->
+    <circle cx="0" cy="0" r="18" fill="none" stroke="#059669" stroke-width="2"/>
+    <circle cx="0" cy="0" r="10" fill="#059669"/>
+    <rect x="-2" y="-21" width="4" height="7" fill="#059669"/>
+    <rect x="-2" y="14" width="4" height="7" fill="#059669"/>
+    <rect x="-21" y="-2" width="7" height="4" fill="#059669"/>
+    <rect x="14" y="-2" width="7" height="4" fill="#059669"/>
+    <rect x="-15" y="-15" width="5" height="3" fill="#059669" transform="rotate(45 -12.5 -13.5)"/>
+    <rect x="10" y="-15" width="5" height="3" fill="#059669" transform="rotate(-45 12.5 -13.5)"/>
+  </g>
+  
+  <g transform="translate(140, 80)">
+    <!-- Right gear -->
+    <circle cx="0" cy="0" r="15" fill="none" stroke="#10b981" stroke-width="2"/>
+    <circle cx="0" cy="0" r="8" fill="#10b981"/>
+    <rect x="-2" y="-18" width="4" height="6" fill="#10b981"/>
+    <rect x="-2" y="12" width="4" height="6" fill="#10b981"/>
+    <rect x="-18" y="-2" width="6" height="4" fill="#10b981"/>
+    <rect x="12" y="-2" width="6" height="4" fill="#10b981"/>
+  </g>
+</svg>
